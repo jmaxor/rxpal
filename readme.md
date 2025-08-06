@@ -51,4 +51,4 @@ If you have luarocks, you can install RXPAL globally on your computer with one c
 
 # Documentation
 
-https://github.com/jmaxor/rxpal/blob/master/documentation.md
+https://github.com/jmaxor/rxpal/blob/main/documentation.md
