@@ -1,7 +1,7 @@
 # RXPAL
 A data-powered abstraction layer for creating RestedXP guides.
 
-Allows you to write this:
+Enables you to write this:
 ```
 accept "your place in the world"
 ```
@@ -28,21 +28,27 @@ And much more!
 
 # Requirements
 
-Just a LUA interpreter (5.1 or higher). I recommend luarocks, which comes packaged with one: https://github.com/luarocks/luarocks/wiki/Download
+Just a LUA interpreter (5.1 or higher). On windows, [luaforwindows](https://github.com/rjpcomputing/luaforwindows) is the easiest to install. If you have a unix OS, you can usually install it with a package manager (`brew install lua`, `apt install lua5.1`, etc).
 
 
 <br />
 
 # Installation
 
-If you have luarocks, you can install RXPAL globally on your computer with one command: `luarocks install rxpal`. Otherwise, you can clone the source with git: `git clone https://github.com/jmaxor/rxpal.git` or download it manually with github's web interface.
+If you have git, you can install RXPAL in your project's directory with one command: `git clone https://github.com/jmaxor/rxpal.git`. Otherwise, you can download the [latest RXPAL release](https://github.com/jmaxor/rxpal/releases) and extract it into your project's directory. If you use the latter, make sure the extracted folder is simply named `rxpal`.
+
+If you want to install RXPAL globally on your computer, you can run this command and place the `rxpal` folder at the path printed (you might need to create some directories to build the full path):
+
+```
+lua -e "print(package.path:match('([^;]*)[\\/]%?[/\\]init%.lua'))"
+```
 
 
 <br />
 
 # Usage
 
-1. Require rxpal in your lua project: `require("rxpal")`
+1. Require rxpal in your lua project: `require("rxpal")` or `require("rxpal.main")`
 2. Create your guide (see examples and documentation)
 3. Run your program and pipe the output to a file (ex. `lua warlock_guide.lua > "C:\Program Files (x86)\World of Warcraft\_classic_era_\Interface\AddOns\warlock_1_20\MyGuide.lua"`)
 
