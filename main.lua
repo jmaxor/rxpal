@@ -20,6 +20,7 @@ local currentQuests = {}
 local totalCurrentQuests = 0
 local lastNpc = nil
 local lastObject = nil
+local startTime = nil
 
 
 -- builds the part of a step for NPC dialogue (coords, target, UX text)
@@ -361,12 +362,14 @@ function finish()
             warn("  "..v[questKeys["name"]])
         end
     end
-    warn('\nguides built successfully!')
+    local totalRuntime = os.clock() - startTime
+    warn("\nguides built successfully in "..totalRuntime.." seconds!")
 end
 
 
 -- initializes the databases based on provided settings
 function init(settings)
+    startTime = os.clock()
     _rxpal_settings = settings
     findQuest, findCurrentQuest, findNpc, findObject, findItem, findSkill = require("rxpal.finders")(settings)
 end
