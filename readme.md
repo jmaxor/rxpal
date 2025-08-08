@@ -35,7 +35,7 @@ Just a LUA interpreter (5.1 or higher). On windows, [luaforwindows](https://gith
 
 # Installation
 
-If you have git, you can install RXPAL in your project's directory with one command: `git clone https://github.com/jmaxor/rxpal.git`. Otherwise, you can download the [latest RXPAL release](https://github.com/jmaxor/rxpal/releases) and extract it into your project's directory. If you use the latter, make sure the extracted folder is simply named `rxpal`.
+If you have git, you can install RXPAL in your project's directory with one command: `git clone https://github.com/jmaxor/rxpal.git`. Otherwise, you can download the [latest RXPAL release](https://github.com/jmaxor/rxpal/releases) and extract it into a folder in your project's directory. If you use the latter, make sure the extracted folder is simply named `rxpal`.
 
 If you want to install RXPAL globally on your computer, you can run this command and place the `rxpal` folder at the path printed (you might need to create some directories to build the full path):
 
