@@ -25,4 +25,19 @@ local function loadFixes(database, fixes, hordeFixes, allianceFixes, settings)
     return database
 end
 
-return {loadFixes=loadFixes}
+
+-- makes a lookup table for searching things quickly by name
+-- table maps entry names to a table of IDs matching the given name
+local function makeLookup(database, keys)
+    local lookupTable = {}
+
+    for id,entry in pairs(database) do
+        local entryName = string.lower(entry[keys.name])
+        lookupTable[entryName] = lookupTable[entryName] or {}
+        table.insert(lookupTable[entryName], id)
+    end
+
+    return lookupTable
+end
+
+return {loadFixes=loadFixes, makeLookup=makeLookup}

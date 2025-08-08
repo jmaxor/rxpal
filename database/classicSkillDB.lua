@@ -2700,4 +2700,14 @@ local skillData = {
 [31018]={"Ferocious Bite","Rank 5"},
 }
 
-return {skillData=skillData, skillKeys=skillKeys}
+local skillLookup = {}
+
+for id,entry in pairs(skillData) do
+    local name = entry[skillKeys.name]
+    local rank = entry[skillKeys.rank] or "rank 1"
+    local entryName = string.lower(name.."_"..rank)
+    skillLookup[entryName] = skillLookup[entryName] or {}
+    table.insert(skillLookup[entryName], id)
+end
+
+return {skillData=skillData, skillKeys=skillKeys, skillLookup=skillLookup}

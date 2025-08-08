@@ -12,7 +12,7 @@ local skillKeys = skillDB.skillKeys
 local warn = unpack(require("rxpal.errorHandling"))
 
 
-local function find(idOrName, db, keys, dbName)
+local function find(idOrName, db, lookup, keys, dbName)
     assert(
         type(idOrName) == "string" or type(idOrName) == "number",
         "please provide a string or number when searching for "..dbName
@@ -26,6 +26,22 @@ local function find(idOrName, db, keys, dbName)
     assert(type(idOrName) == "string", errorMessage)
 
     local entries = {}
+
+    -- find in the lookup table if one exists
+    if lookup then
+        local entryIds = lookup[string.lower(idOrName)]
+        assert(entryIds, errorMessage)
+
+        for _,v in ipairs(entryIds) do
+            table.insert(entries, {id=v, entry=db[v]})
+        end
+
+        assert(#entries > 0, errorMessage)
+
+        return entries
+    end
+
+    -- otherwise try finding with BF search
     for k,v in pairs(db) do
         local entryName = v[keys["name"]]
 
@@ -67,8 +83,8 @@ local function isQuestAvailable(quest, completedQuests)
 end
 
 
-local function findQuest_internal(questIdOrName, completedQuests, questData)
-    local quests = find(questIdOrName, questData, questKeys, "quest")
+local function findQuest_internal(questIdOrName, completedQuests, questData, questLookup)
+    local quests = find(questIdOrName, questData, questLookup, questKeys, "quest")
     local filteredQuests = {}
 
     for _,quest in ipairs(quests) do
@@ -99,7 +115,7 @@ end
 
 
 -- TODO dedupe skills in the skill db
-local function findSkill_internal(skill, rank, skillData)
+local function findSkill_internal(skill, rank, skillData, skillLookup)
     assert(
         type(skill) == "string" or type(skill) == "number",
         "please provide a string or number when searching for a skill"
@@ -117,14 +133,21 @@ local function findSkill_internal(skill, rank, skillData)
     assert(type(skill) == "string", errorMessage)
 
     rank = normalizeRank(rank)
+    local lookupKey = string.lower(skill).."_"..rank
+
     local entries = {}
-    for k,v in pairs(skillData) do
-        local entryName = v[skillKeys["name"]]
-        local entryRank = normalizeRank(v[skillKeys["rank"]])
-        if string.lower(entryName) == string.lower(skill) and entryRank == rank then
-            table.insert(entries, {entry = v, id = k})
-        end
+    local skillIds = skillLookup[lookupKey] or {}
+    for _,id in ipairs(skillIds) do
+        table.insert(entries, {id=id, entry=skillData[id]})
     end
+
+    --for k,v in pairs(skillData) do
+    --    local entryName = v[skillKeys["name"]]
+    --    local entryRank = normalizeRank(v[skillKeys["rank"]])
+    --    if string.lower(entryName) == string.lower(skill) and entryRank == rank then
+    --        table.insert(entries, {entry = v, id = k})
+    --    end
+    --end
 
     if #entries > 1 then
         warn("found "..#entries.." available skills from '"..skill.."', '"..rank.."'. Consider passing a specific skill ID instead of a string. Using first result ("..entries[1].id..").")
@@ -135,9 +158,9 @@ local function findSkill_internal(skill, rank, skillData)
 end
 
 
-local function makeBasicFinder(database, keys, name)
+local function makeBasicFinder(database, lookup, keys, name)
     return function (identifier, userDatabase)
-        local data = find(identifier, database or userDatabase, keys, name)
+        local data = find(identifier, database or userDatabase, lookup, keys, name)
 
         if #data > 1 then
             warn("found "..#data.." "..name.."s from "..identifier..". Consider passing an ID instead of a string. Using first result ("..data[1].id..").")
@@ -149,21 +172,22 @@ end
 
 
 local function loadFinders (settings)
-    local itemData = itemDB.loadDB(settings)
-    local npcData = npcDB.loadDB(settings)
-    local objectData = objectDB.loadDB(settings)
-    local questData = questDB.loadDB(settings)
+    local itemData, itemLookup = itemDB.loadDB(settings)
+    local npcData, npcLookup = npcDB.loadDB(settings)
+    local objectData, objectLookup = objectDB.loadDB(settings)
+    local questData, questLookup = questDB.loadDB(settings)
     local skillData = skillDB.skillData
+    local skillLookup = skillDB.skillLookup
 
-    local findCurrentQuest = makeBasicFinder(nil, questKeys, "current quest")
-    local findNpc = makeBasicFinder(npcData, npcKeys, "npc")
-    local findObject = makeBasicFinder(objectData, objectKeys, "object")
-    local findItem = makeBasicFinder(itemData, itemKeys, "item")
+    local findCurrentQuest = makeBasicFinder(nil, nil, questKeys, "current quest")
+    local findNpc = makeBasicFinder(npcData, npcLookup, npcKeys, "npc")
+    local findObject = makeBasicFinder(objectData, objectLookup, objectKeys, "object")
+    local findItem = makeBasicFinder(itemData, itemLookup, itemKeys, "item")
     local function findQuest (quest, completedQuests)
-        return findQuest_internal(quest, completedQuests, questData)
+        return findQuest_internal(quest, completedQuests, questData, questLookup)
     end
     local function findSkill (skill, rank)
-        return findSkill_internal(skill, rank, skillData)
+        return findSkill_internal(skill, rank, skillData, skillLookup)
     end
 
     return findQuest, findCurrentQuest, findNpc, findObject, findItem, findSkill

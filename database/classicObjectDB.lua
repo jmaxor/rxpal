@@ -7245,7 +7245,9 @@ local allianceFixes = {
 }
 
 local function loadDB (settings)
-    return dbHelper.loadFixes(objectData, objectFixes, hordeFixes, allianceFixes, settings)
+    local dbFixed = dbHelper.loadFixes(objectData, objectFixes, hordeFixes, allianceFixes, settings)
+    local lookup = dbHelper.makeLookup(dbFixed, objectKeys)
+    return dbFixed, lookup
 end
 
 return {loadDB=loadDB, objectKeys=objectKeys}
