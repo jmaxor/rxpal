@@ -1,7 +1,7 @@
 # RXPAL
 A data-powered abstraction layer for creating RestedXP guides.
 
-Enables you to write this:
+Enables you to write steps like this:
 ```
 accept "your place in the world"
 ```
@@ -14,7 +14,6 @@ step
     >>|Tinterface/worldmap/chatbubble_64grey.blp:20|tTalk to |cRXP_FRIENDLY_Kaltunk|r
     .accept 4641 --Your Place In The World
 ```
-And much more!
 
 
 <br />
