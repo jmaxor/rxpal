@@ -95,7 +95,7 @@ local function findQuest_internal(questIdOrName, completedQuests, questData, que
 
     if #filteredQuests == 0 then
         filteredQuests = quests
-        warn("filtering quest "..questIdOrName.." based on requirements removed all results. It's possible you forgot to complete a prereq.")
+        warn("filtering quest '"..questIdOrName.."' based on requirements removed all results. It's possible you forgot to complete a prereq.")
     end
     if #filteredQuests > 1 then
         warn("found "..#filteredQuests.." available quests from '"..questIdOrName.."'. Consider passing a specific quest ID instead of a string. Using first result ("..filteredQuests[1].id..").")
