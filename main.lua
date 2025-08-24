@@ -2,8 +2,11 @@
 -- TODO lastNpc/lastObject should probably be encoded within the steps data. Current system is very error prone.
 -- TODO Maybe some optimizations
 -- TODO add rockspec?
-local warn, wrapWithErrorHandling = unpack(require("rxpal.errorHandling"))
-local arrayConcat, mergeCoordTables, autogoto = unpack(require("rxpal.util"))
+
+local eh = require("rxpal.errorHandling")
+local warn, wrapWithErrorHandling = eh.warn, eh.wrapWithErrorHandling
+
+local util = require("rxpal.util")
 
 local itemKeys = require("rxpal.database.classicItemDB").itemKeys
 local npcKeys = require("rxpal.database.classicNpcDB").npcKeys
@@ -34,7 +37,7 @@ local function autonpc_internal(npc)
     if lastNpc == npcId then
         thisStep = table.remove(steps)
     else
-        autogoto(thisStep, npcSpawn)
+        util.autogoto(thisStep, npcSpawn)
         table.insert(thisStep, ".target "..npcName)
         table.insert(thisStep, ">>|Tinterface/worldmap/chatbubble_64grey.blp:20|tTalk to |cRXP_FRIENDLY_"..npcName.."|r")
     end
@@ -55,7 +58,7 @@ local function autoobject_internal(object)
     if lastObject == objectId then
         thisStep = table.remove(steps)
     else
-        autogoto(thisStep, objectSpawn)
+        util.autogoto(thisStep, objectSpawn)
         table.insert(thisStep, ">>|Tinterface/cursor/interact.blp:20|tClick on the |cRXP_LOOT_"..objectName.."|r object")
     end
 
@@ -207,11 +210,11 @@ local function complete_internal(quest, objectiveId, withCoords)
         for _,npcId in ipairs(npcDrops) do
             local npcEntry = findNpc(npcId)
             table.insert(thisStep, ".mob "..npcEntry[npcKeys["name"]])
-            coords = mergeCoordTables(coords, npcEntry[npcKeys["spawns"]] or {})
+            coords = util.mergeCoordTables(coords, npcEntry[npcKeys["spawns"]] or {})
         end
         for _,objectId in pairs(objectDrops) do
             local objectEntry = findObject(objectId)
-            coords = mergeCoordTables(coords, objectEntry[objectKeys["spawns"]] or {})
+            coords = util.mergeCoordTables(coords, objectEntry[objectKeys["spawns"]] or {})
         end
     elseif objectiveId <= triggerEndStart then --trigger objective
         -- second element in the triggerEnd array are coords for that trigger
@@ -219,7 +222,7 @@ local function complete_internal(quest, objectiveId, withCoords)
     end
 
     if withCoords then
-        autogoto(thisStep, coords)
+        util.autogoto(thisStep, coords)
     end
 
     lastNpc = nil
@@ -296,14 +299,14 @@ function step(...)
         local stepToMerge = arg[i]
         if type(arg[i]) == "number" and not stepsRemoved[arg[i]] then
             stepToMerge = table.remove(steps, arg[i])
-            thisStep = arrayConcat(stepToMerge, thisStep)
+            thisStep = util.arrayConcat(stepToMerge, thisStep)
             stepsRemoved[arg[i]] = true
         elseif type(arg[i]) == "string" then
             -- trim the string
             stepToMerge = string.gsub(stepToMerge, "^%s*(.-)%s*$", "%1")
             table.insert(thisStep, 1, stepToMerge)
         elseif type(arg[i]) == "table" then
-            thisStep = arrayConcat(stepToMerge, thisStep)
+            thisStep = util.arrayConcat(stepToMerge, thisStep)
         end
     end
 

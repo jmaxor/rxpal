@@ -67,4 +67,8 @@ local function autogoto(stepArray, coords)
     table.insert(stepArray, ".goto "..zoneNames[maxZone]..","..xavg..","..yavg)
 end
 
-return {arrayConcat, mergeCoordTables, autogoto}
+return {
+  arrayConcat = arrayConcat,
+  mergeCoordTables = mergeCoordTables,
+  autogoto = autogoto
+}
