@@ -1,9 +1,11 @@
 -- TODO race and class filtering for picking up quests?
 -- TODO lastNpc/lastObject should probably be encoded within the steps data. Current system is very error prone.
--- TODO Maybe some optimizations
--- TODO add rockspec?
-local warn, wrapWithErrorHandling = unpack(require("rxpal.errorHandling"))
-local arrayConcat, mergeCoordTables, autogoto = unpack(require("rxpal.util"))
+local warn = require("rxpal.errorHandling").warn
+local wrapWithErrorHandling = require("rxpal.errorHandling").wrapWithErrorHandling
+
+local arrayConcat = require("rxpal.util").arrayConcat
+local mergeCoordTables = require("rxpal.util").mergeCoordTables
+local autogoto = require("rxpal.util").autogoto
 
 local itemKeys = require("rxpal.database.classicItemDB").itemKeys
 local npcKeys = require("rxpal.database.classicNpcDB").npcKeys

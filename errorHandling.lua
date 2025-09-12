@@ -31,4 +31,7 @@ local function wrapWithErrorHandling(func, stepName)
     end
 end
 
-return {warn, wrapWithErrorHandling}
+return {
+    warn = warn,
+    wrapWithErrorHandling = wrapWithErrorHandling
+}

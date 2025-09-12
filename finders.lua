@@ -9,7 +9,7 @@ local questKeys = questDB.questKeys
 local skillDB = require("rxpal.database.classicSkillDB")
 local skillKeys = skillDB.skillKeys
 
-local warn = unpack(require("rxpal.errorHandling"))
+local warn = require("rxpal.errorHandling").warn
 
 
 local function find(idOrName, db, lookup, keys, dbName)
