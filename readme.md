@@ -27,7 +27,7 @@ step
 
 # Requirements
 
-Just a LUA interpreter (5.4 or higher). On windows, [luaforwindows](https://github.com/rjpcomputing/luaforwindows) is the easiest to install. If you have a unix OS, you can usually install it with a package manager (`brew install lua`, `apt install lua5.4`, etc).
+Just a LUA interpreter (5.1 or higher). On windows, [luaforwindows](https://github.com/rjpcomputing/luaforwindows) is the easiest to install. If you have a unix OS, you can usually install it with a package manager (`brew install lua`, `apt install lua5.1`, etc).
 
 
 <br />
