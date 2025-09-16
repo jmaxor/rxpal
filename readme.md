@@ -39,7 +39,7 @@ If you have git, you can install RXPAL in your project's directory with one comm
 If you want to install RXPAL globally on your computer, you can run this command and place the `rxpal` folder at the path printed (you might need to create some directories to build the full path):
 
 ```
-lua -e "print(package.path:match('([^;]*)[\\/]%?[/\\]init%.lua'))"
+lua -e "print(package.path:match('([^;]*)[\\\\/]%?[/\\\\]init%.lua'))"
 ```
 
 
