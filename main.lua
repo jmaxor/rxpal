@@ -287,6 +287,7 @@ train = wrapWithErrorHandling(train_internal, "train")
 
 -- merges multiple steps and/or text lines into one step, which gets added
 function step(...)
+    local args = {...}
     local thisStep = {}
     local stepsRemoved = {}
 
@@ -295,17 +296,17 @@ function step(...)
     -- front of the `thisStep` array to preserve order.
     -- Also note, we need to track which steps have already been removed for the case where
     -- two steps given were already auto-merged (ex. two dialogue steps for the same NPC)
-    for i=#arg,1,-1 do
-        local stepToMerge = arg[i]
-        if type(arg[i]) == "number" and not stepsRemoved[arg[i]] then
-            stepToMerge = table.remove(steps, arg[i])
+    for i=#args,1,-1 do
+        local stepToMerge = args[i]
+        if type(args[i]) == "number" and not stepsRemoved[args[i]] then
+            stepToMerge = table.remove(steps, args[i])
             thisStep = util.arrayConcat(stepToMerge, thisStep)
-            stepsRemoved[arg[i]] = true
-        elseif type(arg[i]) == "string" then
+            stepsRemoved[args[i]] = true
+        elseif type(args[i]) == "string" then
             -- trim the string
             stepToMerge = string.gsub(stepToMerge, "^%s*(.-)%s*$", "%1")
             table.insert(thisStep, 1, stepToMerge)
-        elseif type(arg[i]) == "table" then
+        elseif type(args[i]) == "table" then
             thisStep = util.arrayConcat(stepToMerge, thisStep)
         end
     end
